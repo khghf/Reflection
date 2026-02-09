@@ -1,0 +1,13 @@
+.vs/
+x64/
+Reflect/GeneratedReflectionCode
+Reflect/x64
+*.vcxproj
+*.filters
+*.user
+*.sln
+bin/
+bin-int/
+GenerateProjects.bat
+obj/
+CodeGenerator/
