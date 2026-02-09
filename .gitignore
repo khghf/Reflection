@@ -8,6 +8,5 @@ Reflect/x64
 *.sln
 bin/
 bin-int/
-GenerateProjects.bat
 obj/
 CodeGenerator/
