@@ -2,7 +2,7 @@
 #include<string_view>
 #include<span>
 #include<type_traits>
-namespace util
+namespace mirror::util
 {
 	constexpr uint64_t hash(std::string_view str)
 	{
@@ -27,6 +27,7 @@ namespace util
 		}
 		return hash_value;
 	}
+
 	template <typename T>
 	inline constexpr uint32_t CountPointers(uint32_t counter = 0)
 	{
@@ -35,6 +36,7 @@ namespace util
 		else
 			return counter;
 	}
+
 	inline const void* VoidOffset(const void* data, size_t offset)
 	{
 		return static_cast<const uint8_t*>(data) + offset;

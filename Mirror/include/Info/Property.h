@@ -6,7 +6,7 @@ namespace mirror
 	using EnumBase = uint32_t;
 	using MemberEnumBase = EnumBase;
 	using FunctionEnumBase = EnumBase;
-	enum class MemberProperties : EnumBase
+	enum class MemberProperties : MemberEnumBase
 	{
 		None = 0,
 		Serializable = 1 << 0,
@@ -16,7 +16,7 @@ namespace mirror
 		MemberProperties::Serializable
 	};
 
-	enum class FunctionProperties : EnumBase
+	enum class FunctionProperties : FunctionEnumBase
 	{
 		None = 0,
 		Method = 1 << 0,

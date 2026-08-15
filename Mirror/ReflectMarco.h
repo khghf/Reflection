@@ -1,4 +1,5 @@
 ﻿#pragma once
+//#define ENABLE_PARSER
 #ifdef ENABLE_PARSER
 	#ifdef __clang__
 		#define CLASS(...)__attribute__((annotate("reflect_class",__VA_ARGS__)))

@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -154,10 +154,10 @@ public:
     }
 
     template<typename T>
-    T* End() { return reinterpret_cast<T*>(stackTop_); }
+    T* EndRenderPass() { return reinterpret_cast<T*>(stackTop_); }
 
     template<typename T>
-    const T* End() const { return reinterpret_cast<T*>(stackTop_); }
+    const T* EndRenderPass() const { return reinterpret_cast<T*>(stackTop_); }
 
     template<typename T>
     T* Bottom() { return reinterpret_cast<T*>(stack_); }

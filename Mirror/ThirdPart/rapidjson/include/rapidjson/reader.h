@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 //
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -180,7 +180,7 @@ concept Handler {
     bool RawNumber(const Ch* str, SizeType length, bool copy);
     bool String(const Ch* str, SizeType length, bool copy);
     bool StartObject();
-    bool Key(const Ch* str, SizeType length, bool copy);
+    bool KeyEvent(const Ch* str, SizeType length, bool copy);
     bool EndObject(SizeType memberCount);
     bool StartArray();
     bool EndArray(SizeType elementCount);
@@ -212,7 +212,7 @@ struct BaseReaderHandler {
     bool RawNumber(const Ch* str, SizeType len, bool copy) { return static_cast<Override&>(*this).String(str, len, copy); }
     bool String(const Ch*, SizeType, bool) { return static_cast<Override&>(*this).Default(); }
     bool StartObject() { return static_cast<Override&>(*this).Default(); }
-    bool Key(const Ch* str, SizeType len, bool copy) { return static_cast<Override&>(*this).String(str, len, copy); }
+    bool KeyEvent(const Ch* str, SizeType len, bool copy) { return static_cast<Override&>(*this).String(str, len, copy); }
     bool EndObject(SizeType) { return static_cast<Override&>(*this).Default(); }
     bool StartArray() { return static_cast<Override&>(*this).Default(); }
     bool EndArray(SizeType) { return static_cast<Override&>(*this).Default(); }
@@ -971,7 +971,7 @@ private:
             size_t length = s.PutEnd(head) - 1;
             RAPIDJSON_ASSERT(length <= 0xFFFFFFFF);
             const typename TargetEncoding::Ch* const str = reinterpret_cast<typename TargetEncoding::Ch*>(head);
-            success = (isKey ? handler.Key(str, SizeType(length), false) : handler.String(str, SizeType(length), false));
+            success = (isKey ? handler.KeyEvent(str, SizeType(length), false) : handler.String(str, SizeType(length), false));
         }
         else {
             StackStream<typename TargetEncoding::Ch> stackStream(stack_);
@@ -979,7 +979,7 @@ private:
             RAPIDJSON_PARSE_ERROR_EARLY_RETURN_VOID;
             SizeType length = static_cast<SizeType>(stackStream.Length()) - 1;
             const typename TargetEncoding::Ch* const str = stackStream.Pop();
-            success = (isKey ? handler.Key(str, length, true) : handler.String(str, length, true));
+            success = (isKey ? handler.KeyEvent(str, length, true) : handler.String(str, length, true));
         }
         if (RAPIDJSON_UNLIKELY(!success))
             RAPIDJSON_PARSE_ERROR(kParseErrorTermination, s.Tell());
@@ -2000,7 +2000,7 @@ private:
                 IterativeParsingMemberValueState,       // Null
                 IterativeParsingMemberValueState        // Number
             },
-        }; // End of G
+        }; // EndRenderPass of G
 
         return static_cast<IterativeParsingState>(G[state][token]);
     }

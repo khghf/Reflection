@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -220,7 +220,7 @@ public:
         return WriteStartObject();
     }
 
-    bool Key(const Ch* str, SizeType length, bool copy = false) { return String(str, length, copy); }
+    bool KeyEvent(const Ch* str, SizeType length, bool copy = false) { return String(str, length, copy); }
 
 #if RAPIDJSON_HAS_STDSTRING
     bool Key(const std::basic_string<Ch>& str)
@@ -233,7 +233,7 @@ public:
         (void)memberCount;
         RAPIDJSON_ASSERT(level_stack_.GetSize() >= sizeof(Level)); // not inside an Object
         RAPIDJSON_ASSERT(!level_stack_.template Top<Level>()->inArray); // currently inside an Array, not Object
-        RAPIDJSON_ASSERT(0 == level_stack_.template Top<Level>()->valueCount % 2); // Object has a Key without a Value
+        RAPIDJSON_ASSERT(0 == level_stack_.template Top<Level>()->valueCount % 2); // Object has a KeyEvent without a Value
         level_stack_.template Pop<Level>(1);
         return EndValue(WriteEndObject());
     }
@@ -258,7 +258,7 @@ public:
 
     //! Simpler but slower overload.
     bool String(const Ch* const& str) { return String(str, internal::StrLen(str)); }
-    bool Key(const Ch* const& str) { return Key(str, internal::StrLen(str)); }
+    bool KeyEvent(const Ch* const& str) { return KeyEvent(str, internal::StrLen(str)); }
     
     //@}
 

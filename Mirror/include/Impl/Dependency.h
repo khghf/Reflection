@@ -1,4 +1,7 @@
 ﻿#pragma once
+/// <summary>
+/// 为标准容器和智能指针类型添加依赖关系的模板结构体。
+/// </summary>
 namespace mirror
 {
 #ifdef _VECTOR_
@@ -70,33 +73,33 @@ namespace mirror
 #endif
 
 #ifdef _MAP_
-	template <typename Key, typename Value>
-	struct AddDependency<std::map<Key, Value>>
+	template <typename KeyEvent, typename Value>
+	struct AddDependency<std::map<KeyEvent, Value>>
 	{
-		inline static AutoRegisterTypeOnce<Key> RegisterKey{};
+		inline static AutoRegisterTypeOnce<KeyEvent> RegisterKey{};
 		inline static AutoRegisterTypeOnce<Value> RegisterValue{};
 	};
 
-	template <typename Key, typename Value>
-	struct AddDependency<std::multimap<Key, Value>>
+	template <typename KeyEvent, typename Value>
+	struct AddDependency<std::multimap<KeyEvent, Value>>
 	{
-		inline static AutoRegisterTypeOnce<Key> RegisterKey{};
+		inline static AutoRegisterTypeOnce<KeyEvent> RegisterKey{};
 		inline static AutoRegisterTypeOnce<Value> RegisterValue{};
 	};
 #endif
 
 #ifdef _UNORDERED_MAP_
-	template <typename Key, typename Value>
-	struct AddDependency<std::unordered_map<Key, Value>>
+	template <typename KeyEvent, typename Value>
+	struct AddDependency<std::unordered_map<KeyEvent, Value>>
 	{
-		inline static AutoRegisterTypeOnce<Key> RegisterKey{};
+		inline static AutoRegisterTypeOnce<KeyEvent> RegisterKey{};
 		inline static AutoRegisterTypeOnce<Value> RegisterValue{};
 	};
 
-	template <typename Key, typename Value>
-	struct AddDependency<std::unordered_multimap<Key, Value>>
+	template <typename KeyEvent, typename Value>
+	struct AddDependency<std::unordered_multimap<KeyEvent, Value>>
 	{
-		inline static AutoRegisterTypeOnce<Key> RegisterKey{};
+		inline static AutoRegisterTypeOnce<KeyEvent> RegisterKey{};
 		inline static AutoRegisterTypeOnce<Value> RegisterValue{};
 	};
 #endif

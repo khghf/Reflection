@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -664,7 +664,7 @@ private:
             std::memset(stateSet_, 0, stateSetSize);
             next->Clear();
             matched = false;
-            for (const SizeType* s = current->template Bottom<SizeType>(); s != current->template End<SizeType>(); ++s) {
+            for (const SizeType* s = current->template Bottom<SizeType>(); s != current->template EndRenderPass<SizeType>(); ++s) {
                 const State& sr = regex_.GetState(*s);
                 if (sr.codepoint == codepoint ||
                     sr.codepoint == RegexType::kAnyCharacterClass || 

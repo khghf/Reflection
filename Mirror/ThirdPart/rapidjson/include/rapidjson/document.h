@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -1674,16 +1674,16 @@ public:
 
     //! Element iterator
     /*! \pre IsArray() == true */
-    ValueIterator Begin() { RAPIDJSON_ASSERT(IsArray()); return GetElementsPointer(); }
+    ValueIterator BeginRenderPass() { RAPIDJSON_ASSERT(IsArray()); return GetElementsPointer(); }
     //! \em Past-the-end element iterator
     /*! \pre IsArray() == true */
-    ValueIterator End() { RAPIDJSON_ASSERT(IsArray()); return GetElementsPointer() + data_.a.size; }
+    ValueIterator EndRenderPass() { RAPIDJSON_ASSERT(IsArray()); return GetElementsPointer() + data_.a.size; }
     //! Constant element iterator
     /*! \pre IsArray() == true */
-    ConstValueIterator Begin() const { return const_cast<GenericValue&>(*this).Begin(); }
+    ConstValueIterator BeginRenderPass() const { return const_cast<GenericValue&>(*this).BeginRenderPass(); }
     //! Constant \em past-the-end element iterator
     /*! \pre IsArray() == true */
-    ConstValueIterator End() const { return const_cast<GenericValue&>(*this).End(); }
+    ConstValueIterator EndRenderPass() const { return const_cast<GenericValue&>(*this).EndRenderPass(); }
 
     //! Request the array to have enough capacity to store elements.
     /*! \param newCapacity  The capacity that the array at least need to have.
@@ -1775,8 +1775,8 @@ public:
     //! Remove an element of array by iterator.
     /*!
         \param pos iterator to the element to remove
-        \pre IsArray() == true && \ref Begin() <= \c pos < \ref End()
-        \return Iterator following the removed element. If the iterator pos refers to the last element, the End() iterator is returned.
+        \pre IsArray() == true && \ref BeginRenderPass() <= \c pos < \ref EndRenderPass()
+        \return Iterator following the removed element. If the iterator pos refers to the last element, the EndRenderPass() iterator is returned.
         \note Linear time complexity.
     */
     ValueIterator Erase(ConstValueIterator pos) {
@@ -1787,7 +1787,7 @@ public:
     /*!
         \param first iterator to the first element to remove
         \param last  iterator following the last element to remove
-        \pre IsArray() == true && \ref Begin() <= \c first <= \c last <= \ref End()
+        \pre IsArray() == true && \ref BeginRenderPass() <= \c first <= \c last <= \ref EndRenderPass()
         \return Iterator following the last removed element.
         \note Linear time complexity.
     */
@@ -1795,13 +1795,13 @@ public:
         RAPIDJSON_ASSERT(IsArray());
         RAPIDJSON_ASSERT(data_.a.size > 0);
         RAPIDJSON_ASSERT(GetElementsPointer() != 0);
-        RAPIDJSON_ASSERT(first >= Begin());
+        RAPIDJSON_ASSERT(first >= BeginRenderPass());
         RAPIDJSON_ASSERT(first <= last);
-        RAPIDJSON_ASSERT(last <= End());
-        ValueIterator pos = Begin() + (first - Begin());
+        RAPIDJSON_ASSERT(last <= EndRenderPass());
+        ValueIterator pos = BeginRenderPass() + (first - BeginRenderPass());
         for (ValueIterator itr = pos; itr != last; ++itr)
             itr->~GenericValue();
-        std::memmove(static_cast<void*>(pos), last, static_cast<size_t>(End() - last) * sizeof(GenericValue));
+        std::memmove(static_cast<void*>(pos), last, static_cast<size_t>(EndRenderPass() - last) * sizeof(GenericValue));
         data_.a.size -= static_cast<SizeType>(last - first);
         return pos;
     }
@@ -1956,7 +1956,7 @@ public:
                 return false;
             for (ConstMemberIterator m = MemberBegin(); m != MemberEnd(); ++m) {
                 RAPIDJSON_ASSERT(m->name.IsString()); // User may change the type of name by MemberIterator.
-                if (RAPIDJSON_UNLIKELY(!handler.Key(m->name.GetString(), m->name.GetStringLength(), (m->name.data_.f.flags & kCopyFlag) != 0)))
+                if (RAPIDJSON_UNLIKELY(!handler.KeyEvent(m->name.GetString(), m->name.GetStringLength(), (m->name.data_.f.flags & kCopyFlag) != 0)))
                     return false;
                 if (RAPIDJSON_UNLIKELY(!m->value.Accept(handler)))
                     return false;
@@ -1966,7 +1966,7 @@ public:
         case kArrayType:
             if (RAPIDJSON_UNLIKELY(!handler.StartArray()))
                 return false;
-            for (ConstValueIterator v = Begin(); v != End(); ++v)
+            for (ConstValueIterator v = BeginRenderPass(); v != EndRenderPass(); ++v)
                 if (RAPIDJSON_UNLIKELY(!v->Accept(handler)))
                     return false;
             return handler.EndArray(data_.a.size);
@@ -2844,7 +2844,7 @@ public:
 
     bool StartObject() { new (stack_.template Push<ValueType>()) ValueType(kObjectType); return true; }
     
-    bool Key(const Ch* str, SizeType length, bool copy) { return String(str, length, copy); }
+    bool KeyEvent(const Ch* str, SizeType length, bool copy) { return String(str, length, copy); }
 
     bool EndObject(SizeType memberCount) {
         typename ValueType::Member* members = stack_.template Pop<typename ValueType::Member>(memberCount);
@@ -2920,8 +2920,8 @@ public:
     bool Empty() const { return value_.Empty(); }
     void Clear() const { value_.Clear(); }
     ValueType& operator[](SizeType index) const {  return value_[index]; }
-    ValueIterator Begin() const { return value_.Begin(); }
-    ValueIterator End() const { return value_.End(); }
+    ValueIterator BeginRenderPass() const { return value_.BeginRenderPass(); }
+    ValueIterator EndRenderPass() const { return value_.EndRenderPass(); }
     GenericArray Reserve(SizeType newCapacity, AllocatorType &allocator) const { value_.Reserve(newCapacity, allocator); return *this; }
     GenericArray PushBack(ValueType& value, AllocatorType& allocator) const { value_.PushBack(value, allocator); return *this; }
 #if RAPIDJSON_HAS_CXX11_RVALUE_REFS
@@ -2934,8 +2934,8 @@ public:
     ValueIterator Erase(ConstValueIterator first, ConstValueIterator last) const { return value_.Erase(first, last); }
 
 #if RAPIDJSON_HAS_CXX11_RANGE_FOR
-    ValueIterator begin() const { return value_.Begin(); }
-    ValueIterator end() const { return value_.End(); }
+    ValueIterator begin() const { return value_.BeginRenderPass(); }
+    ValueIterator end() const { return value_.EndRenderPass(); }
 #endif
 
 private:

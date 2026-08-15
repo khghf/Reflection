@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 //
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -45,7 +45,7 @@ concept Stream {
     //! \return Number of characters read from start.
     size_t Tell();
 
-    //! Begin writing operation at the current read pointer.
+    //! BeginRenderPass writing operation at the current read pointer.
     //! \return The begin writer pointer.
     Ch* PutBegin();
 
@@ -55,7 +55,7 @@ concept Stream {
     //! Flush the buffer.
     void Flush();
 
-    //! End the writing operation.
+    //! EndRenderPass the writing operation.
     //! \param begin The begin write pointer returned by PutBegin().
     //! \return Number of characters written.
     size_t PutEnd(Ch* begin);

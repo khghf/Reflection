@@ -3,16 +3,12 @@
 #include"Property.h"
 namespace mirror
 {
-	/*
-	用于描述变量，内部持有描述变量类型的TypeId
-	*/
+	/// <summary>
+	/// 用于描述变量的类，内部持有描述变量类型的 TypeId，并提供多种方法来操作和查询变量的属性。
+	/// </summary>
 	class VariableId final
 	{
-	private:
-		static constexpr uint32_t ConstFlag			= 1 << 0; //const int
-		static constexpr uint32_t ReferenceFlag		= 1 << 1; //const int&
-		static constexpr uint32_t VolatileFlag		= 1 << 2; //volatile int
-		static constexpr uint32_t RValReferenceFlag = 1 << 3; //int&&
+	
 	public:
 		constexpr explicit VariableId(TypeId id) : m_Type{ id } {}
 		constexpr VariableId() = default;
@@ -76,18 +72,28 @@ namespace mirror
 
 			return name;
 		}
-
+	private:
+		static constexpr uint32_t ConstFlag = 1 << 0; //const int
+		static constexpr uint32_t ReferenceFlag = 1 << 1; //const int&
+		static constexpr uint32_t VolatileFlag = 1 << 2; //volatile int
+		static constexpr uint32_t RValReferenceFlag = 1 << 3; //int&&
 	private:
 		TypeId		m_Type{ };	
 		uint32_t	m_ArraySize{ };	
 		uint16_t	m_PointerAmount{ };	
-		uint8_t		m_TraitFlags{ };	
+		uint32_t		m_TraitFlags{ };
 	};
 
 	class TypeTuple;
+
+	/// <summary>
+	/// 描述一个数据成员的信息，包括名称、类型、偏移量、大小、对齐方式以及属性。
+	/// </summary>
 	struct MemberInfo final
 	{
-		std::string			Name{ }; 
+		friend class TypeId;
+
+		std::string			Name{ };
 		VariableId			Variable{ }; 
 		uint32_t			Offset{ };
 		uint32_t			Size{ }; 
@@ -95,11 +101,9 @@ namespace mirror
 
 		MemberProperties	Properties{ };
 
-
 		constexpr bool operator<(const MemberInfo& rhs) const { return Offset < rhs.Offset; }
 
 		constexpr bool IsPropertySet(MemberProperties property) const { return !!(Properties & property); }
-		friend class TypeId;
 
 		template<typename T>
 		void Set(void* instance, T&& data)const;
@@ -111,4 +115,7 @@ namespace mirror
 		void	(*Setter)(void* instance, TypeTuple&typeTuple, uint32_t offset);
 		void*	(*Getter)(void* instance, uint32_t offset);
 	};
+
+	
+
 }

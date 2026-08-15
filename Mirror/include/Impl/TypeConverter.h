@@ -12,6 +12,8 @@ namespace mirror
                 uint8_t, uint16_t, uint32_t, uint64_t,
                 int8_t, int16_t, int32_t, int64_t>();
         }
+        template<typename T>
+        static void NumericConvertHelper(const VariableId& from,void*fromData,T* outval);
     public:
         template<typename To>
         static To* Convert(const VariableId& fromId, void* fromData)
@@ -118,19 +120,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static float target_val = 0.0f; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<float>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<float>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<float>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<float>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<float>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<float>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<float>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<float>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<float>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<float>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = *static_cast<float*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val;
     }
     template<>
@@ -138,19 +128,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static double target_val = 0.0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<double>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<double>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<double>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<double>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<double>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<double>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<double>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<double>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<double>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<double>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = *static_cast<double*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val;
     }
 
@@ -159,19 +137,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static int32_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<int32_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<int32_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<int32_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<int32_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<int32_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<int32_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<int32_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<int32_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<int32_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<int32_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = *static_cast<int32_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -180,19 +146,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static int8_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<int8_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<int8_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<int8_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<int8_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<int8_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<int8_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<int8_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<int8_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<int8_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<int8_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = *static_cast<int8_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -201,19 +155,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static int16_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<int16_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<int16_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<int16_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<int16_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<int16_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<int16_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<int16_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<int16_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<int16_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<int16_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = *static_cast<int16_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -222,19 +164,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static int64_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<int64_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<int64_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<int64_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<int64_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<int64_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<int64_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<int64_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<int64_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<int64_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<int64_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = *static_cast<int64_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -243,19 +173,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static uint8_t target_val = 0;
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<uint8_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<uint8_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<uint8_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<uint8_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<uint8_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<uint8_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<uint8_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<uint8_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<uint8_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<uint8_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = *static_cast<uint8_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -264,19 +182,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static uint16_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<uint16_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<uint16_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<uint16_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<uint16_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<uint16_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<uint16_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<uint16_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<uint16_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<uint16_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<uint16_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = *static_cast<uint16_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val;
     }
 
@@ -285,19 +191,7 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static uint32_t target_val = 0; 
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<uint32_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<uint32_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<uint32_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<uint32_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<uint32_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<uint32_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<uint32_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<uint32_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<uint32_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = static_cast<uint32_t>(*static_cast<uint64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = *static_cast<uint32_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
     }
 
@@ -306,20 +200,24 @@ namespace mirror
     {
         if (!IsNumericType(from)) return nullptr;
         static uint64_t target_val = 0;
-
-        if (from.GetTypeId().IsOneOf<int>()) target_val = static_cast<uint64_t>(*static_cast<int*>(fromData));
-        else if (from.GetTypeId().IsOneOf<float>()) target_val = static_cast<uint64_t>(*static_cast<float*>(fromData));
-        else if (from.GetTypeId().IsOneOf<double>()) target_val = static_cast<uint64_t>(*static_cast<double*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int8_t>()) target_val = static_cast<uint64_t>(*static_cast<int8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int16_t>()) target_val = static_cast<uint64_t>(*static_cast<int16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int32_t>()) target_val = static_cast<uint64_t>(*static_cast<int32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<int64_t>()) target_val = static_cast<uint64_t>(*static_cast<int64_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint8_t>()) target_val = static_cast<uint64_t>(*static_cast<uint8_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint16_t>()) target_val = static_cast<uint64_t>(*static_cast<uint16_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint32_t>()) target_val = static_cast<uint64_t>(*static_cast<uint32_t*>(fromData));
-        else if (from.GetTypeId().IsOneOf<uint64_t>()) target_val = *static_cast<uint64_t*>(fromData);
-
+        NumericConvertHelper(from, fromData, &target_val);
         return &target_val; 
+    }
+
+    template<typename T>
+    inline void TypeConverter::NumericConvertHelper(const VariableId& from, void* fromData, T* outval)
+    {
+        if      (from.GetTypeId().IsOneOf<int>())       *outval = static_cast<T>(*static_cast<int*>(fromData));
+        else if (from.GetTypeId().IsOneOf<float>())     *outval = static_cast<T>(*static_cast<float*>(fromData));
+        else if (from.GetTypeId().IsOneOf<double>())    *outval = static_cast<T>(*static_cast<double*>(fromData));
+        else if (from.GetTypeId().IsOneOf<int8_t>())    *outval = static_cast<T>(*static_cast<int8_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<int16_t>())   *outval = static_cast<T>(*static_cast<int16_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<int32_t>())   *outval = static_cast<T>(*static_cast<int32_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<int64_t>())   *outval = static_cast<T>(*static_cast<int64_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<uint8_t>())   *outval = static_cast<T>(*static_cast<uint8_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<uint16_t>())  *outval = static_cast<T>(*static_cast<uint16_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<uint32_t>())  *outval = static_cast<T>(*static_cast<uint32_t*>(fromData));
+        else if (from.GetTypeId().IsOneOf<uint64_t>())  *outval = *static_cast<T*>(fromData);
     }
 
 } // namespace mirror

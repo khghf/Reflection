@@ -292,10 +292,6 @@ namespace mirror
 	}
 
 
-
-
-	
-
 	template<typename ...T>
 	inline TypeTuple::TypeTuple(T && ...arg)
 	{

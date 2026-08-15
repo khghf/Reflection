@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available->
+﻿// Tencent is pleased to support the open source community by making RapidJSON available->
 //
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip-> All rights reserved->
 //
@@ -358,7 +358,7 @@ public:
     }
 
     bool StartObject() { return true; }
-    bool Key(const Ch* str, SizeType len, bool copy) { return String(str, len, copy); }
+    bool KeyEvent(const Ch* str, SizeType len, bool copy) { return String(str, len, copy); }
     bool EndObject(SizeType memberCount) { 
         uint64_t h = Hash(0, kObjectType);
         uint64_t* kv = stack_.template Pop<uint64_t>(memberCount * 2);
@@ -608,14 +608,14 @@ public:
             if (v->IsString())
                 AddType(*v);
             else if (v->IsArray())
-                for (ConstValueIterator itr = v->Begin(); itr != v->End(); ++itr)
+                for (ConstValueIterator itr = v->BeginRenderPass(); itr != v->EndRenderPass(); ++itr)
                     AddType(*itr);
         }
 
         if (const ValueType* v = GetMember(value, GetEnumString())) {
             if (v->IsArray() && v->Size() > 0) {
                 enum_ = static_cast<uint64_t*>(allocator_->Malloc(sizeof(uint64_t) * v->Size()));
-                for (ConstValueIterator itr = v->Begin(); itr != v->End(); ++itr) {
+                for (ConstValueIterator itr = v->BeginRenderPass(); itr != v->EndRenderPass(); ++itr) {
                     typedef Hasher<EncodingType, MemoryPoolAllocator<AllocatorType> > EnumHasherType;
                     char buffer[256u + 24];
                     MemoryPoolAllocator<AllocatorType> hasherAllocator(buffer, sizeof(buffer));
@@ -655,7 +655,7 @@ public:
                     AddUniqueElement(allProperties, itr->name);
 
             if (required && required->IsArray())
-                for (ConstValueIterator itr = required->Begin(); itr != required->End(); ++itr)
+                for (ConstValueIterator itr = required->BeginRenderPass(); itr != required->EndRenderPass(); ++itr)
                     if (itr->IsString())
                         AddUniqueElement(allProperties, *itr);
 
@@ -665,7 +665,7 @@ public:
                 for (ConstMemberIterator itr = dependencies->MemberBegin(); itr != dependencies->MemberEnd(); ++itr) {
                     AddUniqueElement(allProperties, itr->name);
                     if (itr->value.IsArray())
-                        for (ConstValueIterator i = itr->value.Begin(); i != itr->value.End(); ++i)
+                        for (ConstValueIterator i = itr->value.BeginRenderPass(); i != itr->value.EndRenderPass(); ++i)
                             if (i->IsString())
                                 AddUniqueElement(allProperties, *i);
                 }
@@ -707,7 +707,7 @@ public:
         }
 
         if (required && required->IsArray())
-            for (ConstValueIterator itr = required->Begin(); itr != required->End(); ++itr)
+            for (ConstValueIterator itr = required->BeginRenderPass(); itr != required->EndRenderPass(); ++itr)
                 if (itr->IsString()) {
                     SizeType index;
                     if (FindPropertyIndex(*itr, &index)) {
@@ -727,7 +727,7 @@ public:
                     if (itr->value.IsArray()) {
                         properties_[sourceIndex].dependencies = static_cast<bool*>(allocator_->Malloc(sizeof(bool) * propertyCount_));
                         std::memset(properties_[sourceIndex].dependencies, 0, sizeof(bool)* propertyCount_);
-                        for (ConstValueIterator targetItr = itr->value.Begin(); targetItr != itr->value.End(); ++targetItr) {
+                        for (ConstValueIterator targetItr = itr->value.BeginRenderPass(); targetItr != itr->value.EndRenderPass(); ++targetItr) {
                             SizeType targetIndex;
                             if (FindPropertyIndex(*targetItr, &targetIndex))
                                 properties_[sourceIndex].dependencies[targetIndex] = true;
@@ -761,7 +761,7 @@ public:
             else if (v->IsArray()) { // Tuple validation
                 itemsTuple_ = static_cast<const Schema**>(allocator_->Malloc(sizeof(const Schema*) * v->Size()));
                 SizeType index = 0;
-                for (ConstValueIterator itr = v->Begin(); itr != v->End(); ++itr, index++)
+                for (ConstValueIterator itr = v->BeginRenderPass(); itr != v->EndRenderPass(); ++itr, index++)
                     schemaDocument->CreateSchema(&itemsTuple_[itemsTupleCount_++], q.Append(index, allocator_), *itr, document, id_);
             }
         }
@@ -1101,7 +1101,7 @@ public:
         return CreateParallelValidator(context);
     }
 
-    bool Key(Context& context, const Ch* str, SizeType len, bool) const {
+    bool KeyEvent(Context& context, const Ch* str, SizeType len, bool) const {
         RAPIDJSON_SCHEMA_PRINT(Method, "Schema::Key", str);
 
         if (patternProperties_) {
@@ -1356,7 +1356,7 @@ private:
 
     template <typename V1, typename V2>
     void AddUniqueElement(V1& a, const V2& v) {
-        for (typename V1::ConstValueIterator itr = a.Begin(); itr != a.End(); ++itr)
+        for (typename V1::ConstValueIterator itr = a.BeginRenderPass(); itr != a.EndRenderPass(); ++itr)
             if (*itr == v)
                 return;
         V1 c(v, *allocator_);
@@ -2348,7 +2348,7 @@ public:
             }
         } else if (doc.GetType() == kArrayType) {
             // Continue looking
-            for (typename ValueType::ConstValueIterator v = doc.Begin(); v != doc.End(); ++v) {
+            for (typename ValueType::ConstValueIterator v = doc.BeginRenderPass(); v != doc.EndRenderPass(); ++v) {
                 if (v->GetType() == kObjectType || v->GetType() == kArrayType) {
                     resval = FindId(*v, finduri, resptr, localuri, full, here.Append(i, allocator_));
                 }
@@ -2371,21 +2371,21 @@ public:
 
     // Added by PR #1393
     bool IsCyclicRef(const PointerType& pointer) const {
-        for (const SchemaRefPtr* ref = schemaRef_.template Bottom<SchemaRefPtr>(); ref != schemaRef_.template End<SchemaRefPtr>(); ++ref)
+        for (const SchemaRefPtr* ref = schemaRef_.template Bottom<SchemaRefPtr>(); ref != schemaRef_.template EndRenderPass<SchemaRefPtr>(); ++ref)
             if (pointer == **ref)
                 return true;
         return false;
     }
 
     const SchemaType* GetSchema(const PointerType& pointer) const {
-        for (const SchemaEntry* target = schemaMap_.template Bottom<SchemaEntry>(); target != schemaMap_.template End<SchemaEntry>(); ++target)
+        for (const SchemaEntry* target = schemaMap_.template Bottom<SchemaEntry>(); target != schemaMap_.template EndRenderPass<SchemaEntry>(); ++target)
             if (pointer == target->pointer)
                 return target->schema;
         return 0;
     }
 
     PointerType GetPointer(const SchemaType* schema) const {
-        for (const SchemaEntry* target = schemaMap_.template Bottom<SchemaEntry>(); target != schemaMap_.template End<SchemaEntry>(); ++target)
+        for (const SchemaEntry* target = schemaMap_.template Bottom<SchemaEntry>(); target != schemaMap_.template EndRenderPass<SchemaEntry>(); ++target)
             if (schema == target->schema)
                 return target->pointer;
         return PointerType();
@@ -2543,7 +2543,7 @@ public:
         if (GetContinueOnErrors() && !error_.ObjectEmpty()) return false;
         return true;
     }
-    //! End of Implementation of ISchemaValidator
+    //! EndRenderPass of Implementation of ISchemaValidator
 
     //! Gets the error object.
     ValueType& GetError() { return error_; }
@@ -2807,7 +2807,7 @@ public:
     }
 
 #define RAPIDJSON_SCHEMA_HANDLE_PARALLEL_(method, arg2)\
-    for (Context* context = schemaStack_.template Bottom<Context>(); context != schemaStack_.template End<Context>(); context++) {\
+    for (Context* context = schemaStack_.template Bottom<Context>(); context != schemaStack_.template EndRenderPass<Context>(); context++) {\
         if (context->hasher)\
             static_cast<HasherType*>(context->hasher)->method arg2;\
         if (context->validators)\
@@ -2847,16 +2847,16 @@ public:
         return valid_;
     }
     
-    bool Key(const Ch* str, SizeType len, bool copy) {
+    bool KeyEvent(const Ch* str, SizeType len, bool copy) {
         RAPIDJSON_SCHEMA_PRINT(Method, "GenericSchemaValidator::Key", str);
         if (!valid_) return false;
         AppendToken(str, len);
-        if (!CurrentSchema().Key(CurrentContext(), str, len, copy) && !GetContinueOnErrors()) {
+        if (!CurrentSchema().KeyEvent(CurrentContext(), str, len, copy) && !GetContinueOnErrors()) {
             valid_ = false;
             return valid_;
         }
-        RAPIDJSON_SCHEMA_HANDLE_PARALLEL_(Key, (str, len, copy));
-        valid_ = !outputHandler_ || outputHandler_->Key(str, len, copy);
+        RAPIDJSON_SCHEMA_HANDLE_PARALLEL_(KeyEvent, (str, len, copy));
+        valid_ = !outputHandler_ || outputHandler_->KeyEvent(str, len, copy);
         return valid_;
     }
     
@@ -2932,7 +2932,7 @@ public:
     virtual void FreeState(void* p) {
         StateAllocator::Free(p);
     }
-    // End of implementation of ISchemaStateFactory<SchemaType>
+    // EndRenderPass of implementation of ISchemaStateFactory<SchemaType>
 
 private:
     typedef typename SchemaType::Context Context;
@@ -3032,9 +3032,9 @@ private:
                 HashCodeArray* a = static_cast<HashCodeArray*>(context.arrayElementHashCodes);
                 if (!a)
                     CurrentContext().arrayElementHashCodes = a = new (GetStateAllocator().Malloc(sizeof(HashCodeArray))) HashCodeArray(kArrayType);
-                for (typename HashCodeArray::ConstValueIterator itr = a->Begin(); itr != a->End(); ++itr)
+                for (typename HashCodeArray::ConstValueIterator itr = a->BeginRenderPass(); itr != a->EndRenderPass(); ++itr)
                     if (itr->GetUint64() == h) {
-                        DuplicateItems(static_cast<SizeType>(itr - a->Begin()), a->Size());
+                        DuplicateItems(static_cast<SizeType>(itr - a->BeginRenderPass()), a->Size());
                         // Cleanup before returning if continuing
                         if (GetContinueOnErrors()) {
                             a->PushBack(h, GetStateAllocator());

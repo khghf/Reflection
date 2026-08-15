@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -863,7 +863,7 @@ public:
         case kArrayType:
             if (last->index == kPointerInvalidIndex || last->index >= v->Size())
                 return false;
-            v->Erase(v->Begin() + last->index);
+            v->Erase(v->BeginRenderPass() + last->index);
             return true;
         default:
             return false;

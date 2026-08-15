@@ -2,9 +2,10 @@
 #include<type_traits>
 namespace trait
 {
-	/*
-	移除指针
-	*/
+	/// <summary>
+	/// 移除类型中的所有指针修饰符。
+	/// </summary>
+	/// <typeparam name="T">要移除指针修饰符的类型。</typeparam>
 	template <typename T> struct remove_all_pointers
 	{
 		using Type = T;
@@ -18,9 +19,11 @@ namespace trait
 	template <typename T>
 	using remove_all_pointers_t = typename remove_all_pointers<T>::Type;
 
-	/*
-	移除所有修饰符
-	*/
+
+	/// <summary>
+	/// 提取类型的基础形式，移除引用、指针、数组和修饰符。
+	/// </summary>
+	/// <typeparam name="T">要处理的类型。</typeparam>
 	template <typename T> struct strip_type
 	{
 		using Type = std::remove_cvref_t<remove_all_pointers_t<std::remove_reference_t<std::remove_all_extents_t<T>>>>;
@@ -29,7 +32,7 @@ namespace trait
 	template <typename T>
 	using strip_type_t = typename strip_type<T>::Type;
 
-
+	
 	template <typename T>
 	concept STDSwappable = requires(T & lhs, T & rhs) { std::swap(lhs, rhs); };
 

@@ -1,4 +1,4 @@
-// Tencent is pleased to support the open source community by making RapidJSON available.
+﻿// Tencent is pleased to support the open source community by making RapidJSON available.
 // 
 // Copyright (C) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 //
@@ -126,7 +126,7 @@ public:
         return Base::WriteStartObject();
     }
 
-    bool Key(const Ch* str, SizeType length, bool copy = false) { return String(str, length, copy); }
+    bool KeyEvent(const Ch* str, SizeType length, bool copy = false) { return String(str, length, copy); }
 
 #if RAPIDJSON_HAS_STDSTRING
     bool Key(const std::basic_string<Ch>& str) {
@@ -138,7 +138,7 @@ public:
         (void)memberCount;
         RAPIDJSON_ASSERT(Base::level_stack_.GetSize() >= sizeof(typename Base::Level)); // not inside an Object
         RAPIDJSON_ASSERT(!Base::level_stack_.template Top<typename Base::Level>()->inArray); // currently inside an Array, not Object
-        RAPIDJSON_ASSERT(0 == Base::level_stack_.template Top<typename Base::Level>()->valueCount % 2); // Object has a Key without a Value
+        RAPIDJSON_ASSERT(0 == Base::level_stack_.template Top<typename Base::Level>()->valueCount % 2); // Object has a KeyEvent without a Value
        
         bool empty = Base::level_stack_.template Pop<typename Base::Level>(1)->valueCount == 0;
 
@@ -185,7 +185,7 @@ public:
 
     //! Simpler but slower overload.
     bool String(const Ch* str) { return String(str, internal::StrLen(str)); }
-    bool Key(const Ch* str) { return Key(str, internal::StrLen(str)); }
+    bool KeyEvent(const Ch* str) { return KeyEvent(str, internal::StrLen(str)); }
 
     //@}
 
