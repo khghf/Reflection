@@ -1,0 +1,9 @@
+﻿set(TARGET_NAME Mirror)
+
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+
+add_library(${TARGET_NAME} INTERFACE)
+target_include_directories(${TARGET_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_features(${TARGET_NAME} INTERFACE cxx_std_20)

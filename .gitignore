@@ -1,12 +1,31 @@
+# VS
 .vs/
-x64/
-Reflect/GeneratedReflectionCode
-Reflect/x64
 *.vcxproj
-*.filters
-*.user
+*.vcxproj.filters
+*.vcxproj.user
 *.sln
+*.suo
+
+# CMake in-source build artifacts
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+Testing/
+Test.dir/
+
+# 编译输出目录
+x64/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
 bin/
 bin-int/
 obj/
+
+# 其他
+Reflect/GeneratedReflectionCode
+Reflect/x64
 CodeGenerator/
